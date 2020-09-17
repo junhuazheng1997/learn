@@ -1,0 +1,154 @@
+import java.text.DateFormat
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+        maven { url "https://repo.spring.io/libs-release" }
+    }
+
+    // gradle插件依赖
+    dependencies {
+        // springboot插件
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.6.RELEASE"
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+
+    idea {
+        module {
+            downloadSources = true
+            downloadJavadoc = true
+        }
+    }
+
+    // maven源
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://repo.spring.io/libs-release" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+
+    // 全局配置
+    configurations {
+        all {
+            exclude(module: "log4j")
+            exclude(module: "slf4j-log4j12")
+            exclude(module: "tomcat-jdbc")
+            exclude(group: 'ch.qos.logback')
+            exclude(module: "spring-boot-starter-logging")
+        }
+    }
+}
+
+def defaultText1 = '''dependencies {
+
+}'''
+
+def defaultText2 = '''dependencies {
+
+}'''
+
+// 所有子项目
+subprojects {
+
+    group = "com.kris1997.learn"
+    version = "1.0.0-SHAPSHOT"
+
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
+        options.encoding = "UTF-8"
+    }
+
+    if(it.rootProject.name.equals(it.parent.name)) {
+        if(!it.buildFile.parentFile.exists()) {
+            it.buildFile.parentFile.mkdirs()
+            it.buildFile.createNewFile()
+            it.buildFile.setText(defaultText2)
+        }
+    } else {
+        plugins.apply 'java'
+        plugins.apply 'maven'
+        plugins.apply 'io.spring.dependency-management'
+
+        ext {
+            compileJava.options.encoding = "UTF-8"
+            compileTestJava.options.encoding = "UTF-8"
+            javadoc.options.encoding = "UTF-8"
+        }
+
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.boot:spring-boot-starter-parent:2.2.6.RELEASE"
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:Hoxton.RC1"
+            }
+        }
+
+        // 构建java项目默认目录
+        task createJavaProject {
+            sourceSets*.java.srcDirs*.each { if (!it.exists()) it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { if (!it.exists()) it.mkdirs() }
+            if (!getBuildFile().exists()) {
+                getBuildFile().createNewFile()
+                getBuildFile().setText(defaultText1)
+            }
+        }
+
+        // 打包
+        task sourcesJar(type: Jar, dependsOn: classes) {
+            archiveClassifier = 'sources'
+            from sourceSets.main.allSource
+        }
+
+        // 构建
+        jar {
+            manifest {
+                attributes(
+                        "Manifest-Version": "1.0",
+                        "Implementation-Title": project.name,
+                        "Implementation-Version": project.version,
+                        "Specification-Vendor": "KRIS1997.LEARN",
+                        "Specification-Title": project.name,
+                        "Implementation-Vendor": "KRIS1997.LEARN",
+                        "Specification-Version": project.version,
+                        "Implementation-Vendor-Id": project.group,
+                        "Built-By": InetAddress.getLocalHost().getHostName() + "(" + InetAddress.getLocalHost().getHostAddress() + ")",
+                        "Build-Jdk": "JDK " + System.getProperty("java.version"),
+                        "Implementation-URL": "https://kris1997.learn",
+                        "Implementation-Date": DateFormat.getDateTimeInstance().format(new Date())
+                )
+            }
+        }
+
+        // 构建jar消息
+        artifacts {
+            archives sourcesJar
+        }
+
+        install {
+            dependsOn build
+            repositories.mavenInstaller {
+                pom.version = "$project.version"
+                pom.artifactId = "$project.name"
+                pom.groupId = "$project.group"
+            }
+        }
+
+        // 公共依赖配置
+        dependencies {
+            compile fileTree(dir: "libs", includes: ["*.jar"])
+            implementation "org.projectlombok:lombok:1.18.10"
+            annotationProcessor "org.projectlombok:lombok:1.18.10"
+
+            testImplementation('org.springframework.boot:spring-boot-starter-test') {
+                exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+            }
+        }
+    }
+
+}

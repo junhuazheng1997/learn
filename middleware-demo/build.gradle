@@ -1,0 +1,7 @@
+subprojects {
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-web'
+        compile 'org.springframework.boot:spring-boot-devtools'
+        runtimeOnly 'mysql:mysql-connector-java'
+    }
+}

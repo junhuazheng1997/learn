@@ -1,0 +1,19 @@
+rootProject.name = 'learn-demo'
+include(":security-demo")
+include(":middleware-demo")
+include(":thread-demo")
+include(":framework-demo")
+include(":design-demo")
+include(":core-demo")
+
+include(":security-demo:login-demo")
+include(":middleware-demo:zookeeper-demo")
+include(":thread-demo:thread-basics")
+include(":framework-demo:mybatis-basics")
+include(":design-demo:factory-model")
+include(":design-demo:adapter-model")
+include(":design-demo:behavior-model")
+include(":core-demo:jvm-demo")
+
+
+

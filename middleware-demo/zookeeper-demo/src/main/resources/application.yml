@@ -1,0 +1,27 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: zookeeper-demo
+  datasource:
+    url: jdbc:myslq://118.24.235.151:3306/test_zookeeper??useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+    # springboot默认连接池 hikari 配置
+    hikari:
+      # 最小空闲连接数量
+      minimum-idle: 5
+      # 空闲连接存活最大时间 默认为10分钟
+      idle-timeout: 180000
+      # 连接池最大连接数 默认为10
+      maximum-pool-size: 10
+      # 控制从池返回的连接的默认自动提交行为 默认为true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 池中连接的最长生命周期 0表示无限生命周期 默认30分钟0
+      max-lifetime: 360000
+      # 数据库连接超时时间 默认30秒
+      connection-timeout: 30000

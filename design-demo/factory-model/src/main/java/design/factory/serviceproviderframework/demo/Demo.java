@@ -1,5 +1,7 @@
 package design.factory.serviceproviderframework.demo;
 
+import java.util.Objects;
+
 /**
  * @author kris
  * @since 2020-09-17
@@ -7,7 +9,7 @@ package design.factory.serviceproviderframework.demo;
 public class Demo {
 
     public static void main(String[] args) {
-        String serviceName = "student_good";
+        String serviceName = "student";
         DemoServices.registerProvider(serviceName, new GoodStudentProvider());
         DemoServices.newInstance(serviceName).learn();
     }

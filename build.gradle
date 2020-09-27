@@ -60,8 +60,8 @@ subprojects {
     version = "1.0.0-SHAPSHOT"
 
     tasks.withType(JavaCompile) {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "8"
+        targetCompatibility = "8"
         options.encoding = "UTF-8"
     }
 

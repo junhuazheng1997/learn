@@ -1,4 +1,4 @@
-package com.junhuazheng.tree.simple;
+package com.junhuazheng.tree.simple.convertGreaterTree;
 
 import com.junhuazheng.tree.pojo.TreeNode;
 

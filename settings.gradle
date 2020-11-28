@@ -6,6 +6,7 @@ include(":framework-demo")
 include(":design-demo")
 include(":core-demo")
 include("leetcode")
+include("sql")
 
 include(":security-demo:login-demo")
 include(":middleware-demo:zookeeper-demo")
@@ -16,6 +17,10 @@ include(":design-demo:adapter-model")
 include(":design-demo:behavior-model")
 include(":core-demo:jvm-demo")
 include(":leetcode:tree")
+include(":leetcode:array")
+include(":leetcode:linked")
+include("sql:generator")
+include(":framework-demo:qz")
 
 
 
